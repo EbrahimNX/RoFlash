@@ -13,6 +13,9 @@ class MainActivity : Activity() {
     private lateinit var wv: WebView
     override fun onCreate(b: Bundle?) {
         super.onCreate(b)
+        window.statusBarColor = android.graphics.Color.WHITE
+        window.navigationBarColor = android.graphics.Color.WHITE
+        window.decorView.systemUiVisibility = 0x2010
         if (android.os.Build.VERSION.SDK_INT >= 33)
             requestPermissions(arrayOf("android.permission.POST_NOTIFICATIONS"), 1)
         wv = WebView(this); setContentView(wv)
