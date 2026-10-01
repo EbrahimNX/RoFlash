@@ -19,7 +19,8 @@ jobs:
             mkdir -p "$(dirname "$d")"
             mv "$f" "$d"
           done
-          find . -path ./.git -prune -o -type f -print | head -30
+          mkdir -p app/src/main/res/mipmap-xxxhdpi
+          cp icon.png app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
       - run: gradle assembleDebug
       - uses: actions/upload-artifact@v4
         with:
