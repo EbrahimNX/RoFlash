@@ -1,0 +1,38 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{--bg:#f4f5f9;--c:#fff;--t:#1f2937;--p:#4255ff;--m:#6b7280}
+@media(prefers-color-scheme:dark){:root{--bg:#0a092d;--c:#2e3056;--t:#fff;--p:#8c9bff;--m:#a0a4c8}}
+*{box-sizing:border-box}body{margin:0;padding:16px;font-family:system-ui,sans-serif;background:var(--bg);color:var(--t)}
+h1{font-size:24px;margin:4px 0 14px}.c{background:var(--c);border-radius:12px;padding:14px;margin:10px 0}
+small{color:var(--m)}input{width:100%;padding:12px;margin:4px 0;border:1px solid var(--m);border-radius:8px;background:var(--bg);color:var(--t);font-size:16px}
+button{padding:12px 16px;margin:4px 4px 4px 0;border:0;border-radius:8px;background:var(--p);color:#fff;font-size:15px}
+button.g{background:var(--c);color:var(--t)}button.r{background:#d33}button.on{outline:3px solid var(--p);outline-offset:1px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.card{min-height:240px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:30px;padding:24px;margin:16px 0}
+</style></head><body><div id="a"></div><script>
+let S=JSON.parse(localStorage.d||'{"sets":[],"cfg":{"on":false,"interval":15,"start":8,"end":22,"rev":false}}');
+let V={n:'home'};const A=document.getElementById('a');
+const save=()=>{const j=JSON.stringify(S);localStorage.d=j;try{Android.sync(j)}catch(x){}};
+const e=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const get=id=>S.sets.find(s=>s.id==id);
+function go(n,x){V=Object.assign({n},x);render()}
+function back(){if(V.n=='home')return false;V.n=='study'?go('set',{id:V.id}):go('home');return true}
+function addSet(){const n=document.getElementById('n').value.trim();if(!n)return;const id=Date.now();S.sets.push({id,name:n,cards:[],passive:true});save();go('set',{id})}
+function addCard(){const f=document.getElementById('f').value.trim(),b=document.getElementById('b').value.trim();if(!f||!b)return;get(V.id).cards.push({f,b});save();render();document.getElementById('f').focus()}
+function delCard(i){get(V.id).cards.splice(i,1);save();render()}
+function delSet(){if(confirm('Delete this set?')){S.sets=S.sets.filter(s=>s.id!=V.id);save();go('home')}}
+function togPassive(){const s=get(V.id);s.passive=!(s.passive!==false);save();render()}
+function study(){go('study',{id:V.id,o:[...get(V.id).cards.keys()],i:0,fl:0,sh:0,rv:0})}
+function shuf(){V.sh=!V.sh;V.o=[...get(V.id).cards.keys()];if(V.sh)for(let i=V.o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[V.o[i],V.o[j]]=[V.o[j],V.o[i]]}V.i=0;V.fl=0;render()}
+function rev(){V.rv=!V.rv;V.fl=0;render()}
+function nav(d){const n=V.o.length;V.i=(V.i+d+n)%n;V.fl=0;render()}
+function cfgSet(k,v){S.cfg[k]=v;save();render()}
+function togOn(){if(!S.cfg.on){let ok=true;try{ok=Android.canOverlay()}catch(x){}if(!ok){alert('Allow "Display over other apps" for Romanian Flash, then come back and switch it on again.');Android.askOverlay();return}}cfgSet('on',!S.cfg.on)}
+function render(){let h='';const s=V.id&&get(V.id);
+if(V.n=='home'){h=`<h1>Romanian Flash</h1><button class=g onclick="go('cfg')">⚙ Passive exposure ${S.cfg.on?'· ON':'· off'}</button>`+S.sets.map(x=>`<div class=c onclick="go('set',{id:${x.id}})"><b>${e(x.name)}</b><br><small>${x.cards.length} cards</small></div>`).join('')+`<div class=c><input id=n placeholder="New set name"><button onclick="addSet()">Create set</button></div>`}
+else if(V.n=='set'){h=`<button class=g onclick="back()">←</button><h1>${e(s.name)}</h1><button onclick="study()" ${s.cards.length?'':'disabled'}>Study (${s.cards.length})</button><button class="g ${s.passive!==false?'on':''}" onclick="togPassive()">Passive: ${s.passive!==false?'included':'excluded'}</button><div class=c><input id=f placeholder="Romanian word"><input id=b placeholder="Translation"><button onclick="addCard()">Add card</button></div>`+s.cards.map((c,i)=>`<div class="c row"><span><b>${e(c.f)}</b> — ${e(c.b)}</span><button class=g onclick="delCard(${i})">✕</button></div>`).join('')+`<button class=r onclick="delSet()">Delete set</button>`}
+else if(V.n=='study'){const c=s.cards[V.o[V.i]],fr=V.rv?c.b:c.f,bk=V.rv?c.f:c.b;h=`<div class=row><button class=g onclick="back()">←</button><small>${V.i+1} / ${V.o.length}</small></div><div class="c card" onclick="V.fl=!V.fl;render()">${e(V.fl?bk:fr)}</div><div class=row><button class=g onclick="nav(-1)">◀ Prev</button><button class=g onclick="nav(1)">Next ▶</button></div><button class="g ${V.sh?'on':''}" onclick="shuf()">🔀 Shuffle</button><button class="g ${V.rv?'on':''}" onclick="rev()">⇄ Reverse</button><p><small>Tap card to flip</small></p>`}
+else{const c=S.cfg;h=`<button class=g onclick="back()">←</button><h1>Passive exposure</h1><div class=c><button class="${c.on?'':'g'}" onclick="togOn()">${c.on?'ON — tap to stop':'OFF — tap to start'}</button><p><small>Random cards pop up over other apps during your time window. Tap once to reveal, tap again to dismiss.</small></p></div><div class=c>Every (minutes)<input type=number min=1 value="${c.interval}" onchange="cfgSet('interval',+this.value||15)">From hour (0-23)<input type=number min=0 max=23 value="${c.start}" onchange="cfgSet('start',+this.value)">Until hour (0-23)<input type=number min=0 max=23 value="${c.end}" onchange="cfgSet('end',+this.value)"><button class="g ${c.rev?'on':''}" onclick="cfgSet('rev',!S.cfg.rev)">⇄ Show translation first</button></div>`}
+A.innerHTML=h}
+render();save();
+</script></body></html>
