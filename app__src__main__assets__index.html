@@ -1,90 +1,132 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-:root{--b:#002B7F;--y:#FCD116;--r:#CE1126;--g1:#f3f4f6;--g2:#e5e7eb;--g3:#6b7280;--t:#111827}
+:root{--b:#002B7F;--y:#FCD116;--r:#CE1126;--g1:#f4f5f7;--g2:#e5e7eb;--g3:#6b7280;--t:#111827}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;font-family:system-ui,sans-serif;background:var(--g1);color:var(--t)}
-#a{padding:16px 16px 180px}h1{font-size:28px;margin:6px 4px 16px;color:var(--b)}h3{margin:0 0 8px}
-.m{color:var(--g3)}.row{display:flex;align-items:center;gap:10px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.cc{border-radius:28px;padding:18px;min-height:130px;position:relative;display:flex;flex-direction:column;justify-content:flex-end}
-.cc b{font-size:18px;word-break:break-word}.cc small{opacity:.85}
-.dots{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.3);color:inherit;font-size:20px}
-.li{background:#fff;border-radius:28px;padding:14px 18px;margin:10px 0;display:flex;gap:12px;align-items:center}
-.sw{width:12px;align-self:stretch;border-radius:999px}
+body{margin:0;font-family:system-ui,sans-serif;background:var(--g1);color:var(--t);overflow-x:hidden}
+h1{font-size:30px;margin:6px 4px 22px;color:var(--b)}h3{margin:0 0 14px;font-size:20px}.m{color:var(--g3)}.row{display:flex;align-items:center;gap:10px}
+#a{padding:20px 18px 200px;min-height:100vh}#a.pg{animation:pg .35s ease}
+@keyframes pg{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+body.ex #a{padding:12px 14px;height:100vh;display:flex;flex-direction:column;min-height:0}body.ex #nv{display:none}
 button,input{font:inherit}
-.btn{border:0;border-radius:999px;padding:13px 22px;background:var(--b);color:#fff;font-weight:600}
-.btn.g{background:#fff;color:var(--t)}.btn.on{background:var(--y);color:var(--t)}
-input[type=text],input[type=time],input[type=number]{padding:12px 16px;border:2px solid var(--g2);border-radius:999px;background:#fff;margin:6px 0;width:100%}
-input[type=number],input[type=time]{width:auto;max-width:130px}
-nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;padding:10px 12px calc(10px + env(safe-area-inset-bottom));gap:8px;border-radius:32px 32px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,.08)}
-nav button{flex:1;border:0;border-radius:999px;padding:12px;background:0;color:var(--g3);font-weight:600}nav button.on{background:var(--b);color:#fff}
-.fabs{position:fixed;right:16px;bottom:96px;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
-.fab{width:68px;height:68px;border-radius:50%;border:0;background:var(--b);color:#fff;font-size:40px;line-height:1;box-shadow:0 6px 16px rgba(0,43,127,.4)}
-.fy{border:0;border-radius:999px;padding:14px 24px;background:var(--y);color:var(--t);font-weight:700;box-shadow:0 6px 16px rgba(0,0,0,.2)}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;z-index:9}
-.sheet{background:#fff;width:100%;border-radius:32px 32px 0 0;padding:22px 20px 28px}
-.sws{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
-.s{width:38px;height:38px;border-radius:50%;border:0;padding:0;box-shadow:0 0 0 2px var(--g2)}.s.on{box-shadow:0 0 0 3px var(--t)}
-.chip{display:inline-block;border-radius:999px;padding:10px 16px;margin:4px 4px 4px 0;background:#fff;border:2px solid var(--g2);font-weight:600}.chip.on{background:var(--b);border-color:var(--b);color:#fff}
-.sc{perspective:1000px;flex:1;min-width:0}.in{position:relative;height:300px;transition:transform .55s;transform-style:preserve-3d}.in.f{transform:rotateY(180deg)}
-.fc{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:36px;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;font-weight:700;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.1);word-break:break-word}
-.bk{transform:rotateY(180deg);background:var(--b);color:#fff}
-.ar{width:44px;height:44px;border-radius:50%;border:0;background:#fff;font-size:22px;box-shadow:0 2px 8px rgba(0,0,0,.12);flex:none}
-.tg{width:56px;height:32px;border-radius:999px;background:var(--g2);position:relative;border:0}
-.tg::after{content:'';position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s}.tg.on{background:var(--b)}.tg.on::after{left:28px}
-</style></head><body><div id="a"></div><script>
+.sb{display:flex;align-items:center;gap:10px;background:#fff;border-radius:999px;padding:0 20px;height:56px;margin-bottom:20px;color:var(--g3);box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.sb input{flex:1;border:0;outline:0;background:0;font-size:16px;color:var(--t)}
+.cc{background:#fff center/cover;border-radius:26px;padding:18px 20px;height:112px;margin-bottom:14px;position:relative;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.cc b{font-size:19px;padding-right:46px;word-break:break-word}.cc small{color:var(--g3)}.cc.im{color:#fff}.cc.im small{color:#e5e7eb}
+.dots{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;border:0;background:rgba(128,128,128,.15);color:inherit;font-size:20px;display:grid;place-items:center}
+.gd{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fcw{height:20vh;min-height:120px;perspective:900px}.fi{position:relative;height:100%;transition:transform .5s;transform-style:preserve-3d}.fcw.f .fi{transform:rotateY(180deg)}
+.ff{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:24px;display:flex;align-items:center;justify-content:center;text-align:center;padding:18px;font-weight:700;box-shadow:0 2px 10px rgba(0,0,0,.06);word-break:break-word}.bk{transform:rotateY(180deg)}
+.ed{position:absolute;top:8px;right:8px;width:32px;height:32px;border-radius:50%;border:0;background:rgba(128,128,128,.15);color:inherit;display:grid;place-items:center}
+.add{border-radius:24px;background:#f8f7f2;border:2px dashed var(--g2);display:grid;place-items:center;height:20vh;min-height:120px;color:var(--g3);font-size:42px}
+.ib{width:44px;height:44px;border-radius:14px;border:0;background:#fff;display:grid;place-items:center;color:var(--t);flex:none;box-shadow:0 2px 8px rgba(0,0,0,.06)}.ib.on{background:var(--y)}
+.sec{background:#fff;border-radius:26px;padding:22px;margin-bottom:18px}.sec h4{margin:0 0 18px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--g3)}
+.rw{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.chip{display:inline-block;border-radius:999px;padding:11px 18px;margin:0 8px 10px 0;background:var(--g1);font-weight:600}.chip.on{background:var(--b);color:#fff}
+.nf{display:inline-flex;align-items:center;gap:10px}
+input[type=number],input[type=time]{width:96px;text-align:center;padding:12px 8px;border:2px solid var(--g2);border-radius:16px;background:#fff;font-size:17px;font-weight:600}input[type=time]{width:130px}
+input[type=text]{width:100%;padding:15px 18px;border:2px solid var(--g2);border-radius:16px;font-size:16px;margin:6px 0;background:#fff}
+.seg{display:flex;background:var(--g1);border-radius:18px;padding:5px}.seg button{flex:1;border:0;background:0;padding:13px;border-radius:14px;font-weight:600}.seg button.on{background:var(--b);color:#fff}
+.tg{width:58px;height:34px;border-radius:999px;background:var(--g2);position:relative;border:0;flex:none;transition:.25s}
+.tg::after{content:'';position:absolute;top:4px;left:4px;width:26px;height:26px;border-radius:50%;background:#fff;transition:.25s;box-shadow:0 1px 4px rgba(0,0,0,.2)}.tg.on{background:var(--b)}.tg.on::after{left:28px}
+.fab{position:fixed;right:20px;bottom:104px;width:68px;height:68px;border-radius:50%;border:0;background:var(--b);color:#fff;font-size:42px;line-height:1;box-shadow:0 8px 20px rgba(0,43,127,.4);z-index:4}
+.fy{position:fixed;right:20px;bottom:104px;border:0;border-radius:20px;padding:17px 30px;background:var(--y);color:var(--t);font-size:17px;font-weight:800;box-shadow:0 8px 20px rgba(0,0,0,.2);z-index:4}
+.go{position:fixed;left:16px;right:16px;bottom:104px;height:64px;border:0;border-radius:22px;background:var(--y);color:var(--t);font-size:18px;font-weight:800;box-shadow:0 8px 20px rgba(0,0,0,.15);z-index:4}
+#nv{position:fixed;left:16px;right:16px;bottom:calc(14px + env(safe-area-inset-bottom));display:flex;background:#fff;border-radius:30px;padding:8px;box-shadow:0 8px 30px rgba(0,0,0,.14);z-index:5}
+#nv button{flex:1;position:relative;z-index:1;border:0;background:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0;color:var(--g3);font-size:11px;font-weight:700;transition:color .3s}
+#nv button.on{color:var(--b)}#nv button svg{transition:transform .35s}#nv button.on svg{transform:translateY(-2px) scale(1.15)}
+.ind{position:absolute;top:8px;bottom:8px;left:8px;width:calc((100% - 16px)/3);background:#E6ECFA;border-radius:22px;transition:transform .45s cubic-bezier(.3,1.3,.5,1)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;z-index:9;animation:fi .2s}.sheet{background:#fff;width:100%;border-radius:32px 32px 0 0;padding:24px 22px 30px;max-height:92vh;overflow:auto;animation:su .3s}
+@keyframes fi{from{opacity:0}}@keyframes su{from{transform:translateY(60px)}}
+.btn{border:0;border-radius:16px;padding:15px 20px;font-weight:700;background:var(--g1);color:var(--t);font-size:15px}.btn.p{background:var(--b);color:#fff}.btn.d{background:var(--r);color:#fff}
+.sws{display:flex;flex-wrap:wrap;gap:12px;margin:14px 0 20px}.s{width:40px;height:40px;border-radius:50%;border:0;box-shadow:0 0 0 2px var(--g2)}.s.on{box-shadow:0 0 0 3px var(--t)}
+.top{display:flex;align-items:center;gap:8px}.cn{border-radius:10px;padding:5px 10px;font-size:12px;font-weight:700;color:#fff}
+.xc{flex:1;min-height:0;margin:12px 0 14px;touch-action:pan-y;perspective:1200px}.xw{height:100%;animation:pg .3s}.xi{position:relative;height:100%;transition:transform .55s;transform-style:preserve-3d}.xi.f{transform:rotateY(180deg)}
+.xf{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:32px;background:#fff;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-weight:700;box-shadow:0 8px 28px rgba(0,0,0,.08);word-break:break-word}.xf.bk{color:var(--b)}
+.rb{display:flex;gap:8px;padding-bottom:calc(8px + env(safe-area-inset-bottom))}.rb button{flex:1;height:62px;border:0;border-radius:16px;font-weight:800;font-size:16px;color:#fff}
+#ts{position:fixed;top:18px;left:50%;transform:translate(-50%,-90px);background:var(--t);color:#fff;padding:13px 22px;border-radius:999px;z-index:100;transition:transform .3s;font-size:14px}#ts.sh{transform:translate(-50%,0)}
+#sp{position:fixed;inset:0;z-index:99;background:#fff;animation:spo .5s 3.2s forwards}
+#sp i{position:absolute;top:0;width:33.4%;height:100%;clip-path:circle(0 at 50% 85%);animation:rev .9s .9s cubic-bezier(.2,.8,.2,1) forwards}
+#sp i:nth-child(2){animation-delay:1.15s}#sp i:nth-child(3){animation-delay:1.4s}
+#sp u{position:absolute;top:50%;width:26px;height:26px;margin-top:-13px;border-radius:50%;transform:scale(0);animation:bn .9s forwards}
+#sp u:nth-of-type(1){left:calc(50% - 50px);background:#002B7F}#sp u:nth-of-type(2){left:calc(50% - 13px);background:#FCD116;animation-delay:.15s}#sp u:nth-of-type(3){left:calc(50% + 24px);background:#CE1126;animation-delay:.3s}
+@keyframes rev{to{clip-path:circle(80% at 50% 50%)}}
+@keyframes bn{0%{transform:scale(0) translateY(40px)}40%{transform:scale(1.3) translateY(-30px)}70%{transform:scale(1) translateY(0)}100%{transform:scale(0)}}
+@keyframes spo{to{opacity:0;visibility:hidden;transform:scale(1.12)}}
+</style></head><body>
+<div id="a"></div><div id="fb"></div><nav id="nv"></nav><div id="ts"></div>
+<div id="sp"><u></u><u></u><u></u><i style="left:0;background:#002B7F"></i><i style="left:33.3%;background:#FCD116"></i><i style="left:66.6%;background:#CE1126"></i></div>
+<script>
 const $=i=>document.getElementById(i),e=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const P=['#002B7F','#FCD116','#CE1126','#1D4ED8','#374151','#6B7280','#9CA3AF','#111827'];
+const ic=d=>`<svg width=22 height=22 viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round>${d}</svg>`;
+const I={search:ic('<circle cx=11 cy=11 r=7 /><path d="m20 20-3.5-3.5"/>'),edit:ic('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>'),
+shuffle:ic('<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>'),rev:ic('<path d="M7 7h13l-3-3M17 17H4l3 3"/>'),restart:ic('<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>'),
+close:ic('<path d="M18 6 6 18M6 6l12 12"/>'),back:ic('<path d="m15 18-6-6 6-6"/>'),layers:ic('<path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="m3 13 9 5 9-5"/>'),
+bolt:ic('<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>'),sliders:ic('<path d="M4 6h8M18 6h2M4 12h2M12 12h8M4 18h10M20 18h0"/><circle cx=15 cy=6 r=2.5 /><circle cx=9 cy=12 r=2.5 /><circle cx=17 cy=18 r=2.5 />')};
+const PC=['#FFFFFF','#002B7F','#FCD116','#CE1126','#1D4ED8','#0EA5E9','#14B8A6','#22C55E','#84CC16','#F97316','#EC4899','#8B5CF6','#6B7280','#111827','#FEF3C7','#DBEAFE','#FCE7F3','#DCFCE7'];
 const uid=()=>Date.now()*10+Math.floor(Math.random()*10);
 const tc=h=>{const n=parseInt(h.slice(1),16);return((n>>16)*.299+((n>>8)&255)*.587+(n&255)*.114)>160?'#111827':'#fff'};
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-const fs=t=>t.length>40?20:t.length>18?26:32;
+const fx=t=>t.length>40?24:t.length>18?32:44,fg=t=>t.length>40?14:t.length>18?17:21;
 function load(){if(localStorage.v2)return JSON.parse(localStorage.v2);
-const n={cols:[],cfg:{on:false,every:15,from:'08:00',to:'22:00',face:'ro'}};
-try{JSON.parse(localStorage.d).sets.forEach((s,i)=>n.cols.push({id:s.id,name:s.name,color:P[i%3],ex:false,ps:true,cards:s.cards.map((c,j)=>({id:s.id+j,en:c.b,ro:c.f,color:''}))}))}catch(x){}return n}
-let S=load(),T='c',cur=null,X=null,M=null;
+const n={cols:[],cfg:{on:false,every:15,all:false,from:'08:00',to:'22:00',face:'ro'}};
+try{JSON.parse(localStorage.d).sets.forEach(s=>n.cols.push({id:s.id,name:s.name,ex:false,ps:true,cards:s.cards.map((c,j)=>({id:s.id+j,en:c.b,ro:c.f,color:'#FFFFFF'}))}))}catch(x){}return n}
+let S=load(),T=0,cur=null,X=null,M=null,Q='',FL={};
 const col=id=>S.cols.find(c=>c.id==id);
 const findCard=id=>{for(const c of S.cols){const k=c.cards.find(k=>k.id==id);if(k)return k}};
-const save=()=>{const j=JSON.stringify(S);localStorage.v2=j;try{Android.sync(j)}catch(x){}};
-function back(){if(M){M=null}else if(X){X=null}else if(cur){cur=null}else if(T!='c'){T='c'}else return false;render();return true}
-function render(){let h=X?exHTML():cur?colHTML():T=='c'?listHTML():T=='x'?exTab():setHTML();
-if(!X){h+='<nav>'+[['c','Collections'],['x','Exercise'],['s','Settings']].map(([k,l])=>`<button class="${T==k?'on':''}" onclick="T='${k}';cur=null;render()">${l}</button>`).join('')+'</nav>';
-if(T=='c')h+=`<div class=fabs><button class=fab onclick="M={t:'${cur?'card':'col'}',id:0};render()">+</button><button class=fy onclick="startX(${cur||0})">Exercise</button></div>`}
-$('a').innerHTML=h+(M?modal():'');if(M)$('i1').focus()}
-function listHTML(){return'<h1>Collections</h1><div class=grid>'+S.cols.map(c=>`<div class=cc style="background:${c.color};color:${tc(c.color)}" onclick="cur=${c.id};render()"><button class=dots onclick="event.stopPropagation();M={t:'col',id:${c.id}};render()">⋮</button><b>${e(c.name)}</b><small>${c.cards.length} cards</small></div>`).join('')+'</div>'+(S.cols.length?'':'<p class=m>Tap + to create your first collection.</p>')}
-function colHTML(){const c=col(cur);return`<div class=row><button class=ar onclick="back()">‹</button><h1 style="margin:0;flex:1">${e(c.name)}</h1></div><p class=m style="margin:12px 4px">${c.cards.length} cards · tap a card to edit</p>`+c.cards.map(k=>`<div class=li onclick="M={t:'card',id:${k.id}};render()"><div class=sw style="background:${k.color||'#e5e7eb'}"></div><div style="flex:1"><b>${e(k.en)}</b><br><span class=m>${e(k.ro)}</span></div><span class=m>${k.r=='e'?'Easy':k.r=='h'?'Hard':''}</span></div>`).join('')}
-function modal(){const isC=M.t=='col',k=(isC?col(M.id):findCard(M.id))||{name:'',color:isC?P[0]:'',en:'',ro:''};if(M.color===undefined)M.color=k.color;
+const save=()=>{localStorage.v2=JSON.stringify(S);try{Android.sync(JSON.stringify(S,(k,v)=>k=='img'?undefined:v))}catch(x){}};
+const toast=m=>{const t=$('ts');t.textContent=m;t.classList.add('sh');setTimeout(()=>t.classList.remove('sh'),2200)};
+function back(){if(M)M=null;else if(X)X=null;else if(cur)cur=null;else if(T!=0)T=0;else return false;render(1);return true}
+function tab(i){T=i;cur=null;render(1)}
+function render(anim){document.body.classList.toggle('ex',!!X);
+$('a').innerHTML=(X?exHTML():cur?colHTML():[listHTML,exTab,setHTML][T]())+(M?modal():'');
+const n=S.cols.filter(c=>!c.ex).reduce((a,c)=>a+c.cards.length,0);
+$('fb').innerHTML=X||M?'':cur?`<button class=fy onclick="startX(${cur})">Exercise</button>`:T==0?`<button class=fab onclick="M={t:'col',id:0};render()">+</button>`:T==1?`<button class=go onclick="startX(0)">Start exercise · ${n} cards</button>`:'';
+$('ind').style.transform=`translateX(${T*100}%)`;document.querySelectorAll('#nv button').forEach((b,i)=>b.classList.toggle('on',i==T));
+if(anim){const a=$('a');a.classList.remove('pg');void a.offsetWidth;a.classList.add('pg')}if(M)$('i1').focus()}
+$('nv').innerHTML='<div class=ind id=ind></div>'+['Collections','Exercise','Preferences'].map((l,i)=>`<button onclick="tab(${i})">${[I.layers,I.bolt,I.sliders][i]}<span>${l}</span></button>`).join('');
+function items(){const l=S.cols.filter(c=>c.name.toLowerCase().includes(Q.toLowerCase())).sort((a,b)=>(b.pin?1:0)-(a.pin?1:0));
+return l.map(c=>`<div class="cc ${c.img?'im':''}" style="${c.img?`background-image:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.5)),url(${c.img})`:''}" onclick="cur=${c.id};render(1)"><b>${c.pin?'📌 ':''}${e(c.name)}</b><small>${c.cards.length} cards</small><button class=dots onclick="event.stopPropagation();M={t:'col',id:${c.id}};render()">⋮</button></div>`).join('')||`<p class=m style="text-align:center;margin-top:40px">${S.cols.length?'No collection found':'Tap + to add your first collection'}</p>`}
+function listHTML(){return`<div class=sb>${I.search}<input id=q placeholder="Search collections" value="${e(Q)}" oninput="Q=this.value;$('lst').innerHTML=items()"></div><div id=lst>${items()}</div>`}
+function flip(el,id){FL[id]=!FL[id];el.classList.toggle('f')}
+function colHTML(){const c=col(cur);return`<div class=row style="margin-bottom:20px"><button class=ib onclick="cur=null;render(1)">${I.back}</button><h2 style="margin:0;font-size:22px">${e(c.name)}</h2></div><div class=gd>`+
+c.cards.map(k=>{const bg=k.color||'#FFFFFF',w=bg.toUpperCase()=='#FFFFFF';return`<div class="fcw ${FL[k.id]?'f':''}" onclick="flip(this,${k.id})"><div class=fi><div class=ff style="background:${bg};color:${tc(bg)};font-size:${fg(k.ro)}px">${e(k.ro)}<button class=ed onclick="event.stopPropagation();M={t:'card',id:${k.id}};render()">${I.edit}</button></div><div class="ff bk" style="background:${w?'var(--b)':bg};color:${w?'#fff':tc(bg)};font-size:${fg(k.en)}px">${e(k.en)}</div></div></div>`}).join('')+`<div class=add onclick="M={t:'card',id:0};render()">+</div></div>`}
+function modal(){const isC=M.t=='col',k=(isC?col(M.id):findCard(M.id))||{};
+if(!M.init){M.init=1;M.v1=isC?k.name||'':k.ro||'';M.v2=k.en||'';M.color=k.color||'#FFFFFF';M.pin=!!k.pin;M.img=k.img||''}
 return`<div class=modal onclick="if(event.target==this)back()"><div class=sheet><h3>${isC?(M.id?'Edit collection':'New collection'):(M.id?'Edit card':'New card')}</h3>`+
-(isC?`<input type=text id=i1 placeholder="Collection name" value="${e(k.name)}">`:`<input type=text id=i1 placeholder="English" value="${e(k.en)}"><input type=text id=i2 placeholder="Romanian" value="${e(k.ro)}">`)+
-'<div class=sws>'+(isC?'':`<button class="s ${M.color?'':'on'}" style="background:#fff" onclick="pick('')">∅</button>`)+P.map(p=>`<button class="s ${M.color==p?'on':''}" style="background:${p}" onclick="pick('${p}')"></button>`).join('')+'</div>'+
-`<div class=row><button class=btn style="flex:1" onclick="msave()">Save</button>${M.id?'<button class="btn" style="background:var(--r)" onclick="mdel()">Delete</button>':''}</div></div></div>`}
-function pick(c){M.color=c;document.querySelectorAll('.sws .s').forEach(b=>b.classList.toggle('on',b.getAttribute('onclick')=="pick('"+c+"')"))}
-function msave(){const a=$('i1').value.trim();if(!a)return;
-if(M.t=='col'){if(M.id){const c=col(M.id);c.name=a;c.color=M.color}else S.cols.push({id:uid(),name:a,color:M.color||P[0],cards:[],ex:false,ps:true})}
-else{const b=$('i2').value.trim();if(!b)return;if(M.id){const k=findCard(M.id);k.en=a;k.ro=b;k.color=M.color}else col(cur).cards.push({id:uid(),en:a,ro:b,color:M.color})}
+(isC?`<input type=text id=i1 placeholder="Collection name" value="${e(M.v1)}" oninput="M.v1=this.value">`+(M.id?`<div class=row style="flex-wrap:wrap;margin:12px 0 22px"><button class="btn ${M.pin?'p':''}" onclick="M.pin=!M.pin;render()">${M.pin?'📌 Pinned':'Pin to top'}</button><button class=btn onclick="$('fi').click()">${M.img?'Change image':'Add image'}</button>${M.img?'<button class=btn onclick="M.img=\'\';render()">Remove image</button>':''}<input type=file id=fi accept="image/*" hidden onchange="readImg(this)"></div>`:'<div style="height:14px"></div>'):
+`<input type=text id=i1 placeholder="Romanian" value="${e(M.v1)}" oninput="M.v1=this.value"><input type=text id=i2 placeholder="English" value="${e(M.v2)}" oninput="M.v2=this.value"><div class=sws>`+PC.map(p=>`<button class="s ${M.color.toUpperCase()==p?'on':''}" style="background:${p}" onclick="M.color='${p}';render()"></button>`).join('')+'</div>')+
+`<div class=row><button class="btn p" style="flex:1" onclick="msave()">Save</button>${M.id?`<button class="btn d" onclick="mdel()">${M.del?'Tap again to delete':'Delete'}</button>`:''}</div></div></div>`}
+function readImg(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,700/i.width),c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);M.img=c.toDataURL('image/jpeg',.7);render()};i.src=r.result};r.readAsDataURL(f)}
+function msave(){const a=(M.v1||'').trim();if(!a)return toast('Please enter a name');
+if(M.t=='col'){let c=M.id&&col(M.id);if(!c){c={id:uid(),cards:[],ex:false,ps:true};S.cols.push(c)}c.name=a;c.pin=M.pin;c.img=M.img}
+else{const b=(M.v2||'').trim();if(!b)return toast('Add both Romanian and English');let k=M.id&&findCard(M.id);if(!k){k={id:uid()};col(cur).cards.push(k)}k.ro=a;k.en=b;k.color=M.color}
 M=null;save();render()}
-function mdel(){if(!confirm('Delete?'))return;if(M.t=='col'){S.cols=S.cols.filter(c=>c.id!=M.id);if(cur==M.id)cur=null}else S.cols.forEach(c=>c.cards=c.cards.filter(k=>k.id!=M.id));M=null;save();render()}
-function exTab(){const n=S.cols.filter(c=>!c.ex).reduce((a,c)=>a+c.cards.length,0);
-return`<h1>Exercise</h1><p class=m style="margin:0 4px 12px">All collections are mixed together. Tap one to exclude it.</p>`+S.cols.map(c=>`<span class="chip ${c.ex?'':'on'}" onclick="col(${c.id}).ex=!col(${c.id}).ex;save();render()">${e(c.name)} · ${c.cards.length}</span>`).join('')+`<p><button class=btn onclick="startX(0)">Start exercise (${n} cards)</button></p>`}
-function startX(id){const l=id?col(id).cards:S.cols.filter(c=>!c.ex).flatMap(c=>c.cards);if(!l.length){alert('No cards to practise yet.');return}
-X={base:l.slice(),o:l.slice(),i:0,f:0,sh:0,rv:0,r:{}};cur=null;render()}
-function exHTML(){const k=X.o[X.i],fr=X.rv?k.ro:k.en,bk=X.rv?k.en:k.ro,n=v=>Object.values(X.r).filter(x=>x==v).length;
-return`<div class=row><button class=ar onclick="X=null;render()">✕</button><b style="flex:1;text-align:center">${X.i+1} / ${X.o.length}</b><span style="width:44px"></span></div>
-<div class=row style="justify-content:center;margin:14px 0"><span class=chip style="background:var(--b);color:#fff;border-color:var(--b)">Easy ${n('e')}</span><span class=chip>Neutral ${n('n')}</span><span class=chip style="background:var(--r);color:#fff;border-color:var(--r)">Hard ${n('h')}</span></div>
-<div class=row style="margin:22px 0"><button class=ar onclick="nav(-1)">‹</button><div class=sc onclick="X.f=!X.f;$('in').classList.toggle('f')"><div class="in ${X.f?'f':''}" id=in><div class=fc style="font-size:${fs(fr)}px;${k.color?`background:${k.color};color:${tc(k.color)}`:''}">${e(fr)}</div><div class="fc bk" style="font-size:${fs(bk)}px">${e(bk)}</div></div></div><button class=ar onclick="nav(1)">›</button></div>
-<div class=row style="justify-content:center"><button class=btn onclick="rate('e')">Easy</button><button class="btn g" onclick="rate('n')">Neutral</button><button class=btn style="background:var(--r)" onclick="rate('h')">Hard</button></div>
-<div class=row style="justify-content:center;margin-top:22px"><button class="btn g ${X.sh?'on':''}" onclick="shufX()">Shuffle</button><button class="btn g ${X.rv?'on':''}" onclick="X.rv=!X.rv;X.f=0;render()">Reverse</button><button class="btn g" onclick="restart()">Restart</button></div>`}
+function mdel(){if(!M.del){M.del=1;render();return}if(M.t=='col'){S.cols=S.cols.filter(c=>c.id!=M.id);if(cur==M.id)cur=null}else S.cols.forEach(c=>c.cards=c.cards.filter(k=>k.id!=M.id));M=null;save();render()}
+function exTab(){return`<h1>Exercise</h1><div class=sec><h4>Include in exercise</h4>`+(S.cols.map(c=>`<span class="chip ${c.ex?'':'on'}" onclick="col(${c.id}).ex=!col(${c.id}).ex;save();render()">${e(c.name)} · ${c.cards.length}</span>`).join('')||'<span class=m>No collections yet</span>')+`</div><p class=m style="margin:0 8px">Cards from all included collections are mixed together.</p>`}
+function startX(id){const l=id?col(id).cards:S.cols.filter(c=>!c.ex).flatMap(c=>c.cards);if(!l.length){toast('No cards to practise yet');return}
+X={base:l.slice(),o:l.slice(),i:0,f:0,sh:0,rv:0,r:{}};cur=null;render(1)}
+function exHTML(){const k=X.o[X.i],fr=X.rv?k.en:k.ro,bk=X.rv?k.ro:k.en,n=v=>Object.values(X.r).filter(x=>x==v).length;
+return`<div class=top><button class=ib onclick="X=null;render(1)">${I.close}</button><button class="ib ${X.sh?'on':''}" onclick="shufX()">${I.shuffle}</button><button class="ib ${X.rv?'on':''}" onclick="X.rv=!X.rv;X.f=0;render()">${I.rev}</button><button class=ib onclick="restart()">${I.restart}</button><span style="flex:1"></span><span class=cn style="background:var(--b)">${n('e')}</span><span class=cn style="background:#9ca3af">${n('n')}</span><span class=cn style="background:var(--r)">${n('h')}</span></div>
+<p class=m style="text-align:center;margin:12px 0 0;font-size:13px">${X.i+1} / ${X.o.length}</p>
+<div class=xc onpointerdown="ds(event)" onpointermove="dm(event)" onpointerup="de()" onpointercancel="de()"><div class=xw id=sw><div class="xi ${X.f?'f':''}" id=in><div class=xf style="font-size:${fx(fr)}px">${e(fr)}</div><div class="xf bk" style="font-size:${fx(bk)}px">${e(bk)}</div></div></div></div>
+<div class=rb><button style="background:var(--b)" onclick="rate('e')">Easy</button><button style="background:#e5e7eb;color:var(--t)" onclick="rate('n')">Neutral</button><button style="background:var(--r)" onclick="rate('h')">Hard</button></div>`}
+let d0=null,dx=0,mv=false;
+function ds(ev){d0=ev.clientX;dx=0;mv=false;try{ev.currentTarget.setPointerCapture(ev.pointerId)}catch(x){}}
+function dm(ev){if(d0===null)return;dx=ev.clientX-d0;if(Math.abs(dx)>10)mv=true;if(mv){const w=$('sw');w.style.animation='none';w.style.transition='none';w.style.transform=`translateX(${dx}px) rotate(${dx/30}deg)`}}
+function de(){if(d0===null)return;d0=null;const w=$('sw');if(!mv){X.f=!X.f;$('in').classList.toggle('f');return}
+if(Math.abs(dx)>90){w.style.transition='transform .25s,opacity .25s';w.style.transform=`translateX(${dx>0?'110vw':'-110vw'})`;w.style.opacity=0;const d=dx;setTimeout(()=>nav(d>0?-1:1),220)}else{w.style.transition='transform .25s';w.style.transform=''}}
 function nav(d){X.i=(X.i+d+X.o.length)%X.o.length;X.f=0;render()}
 function rate(v){const k=X.o[X.i];k.r=v;X.r[k.id]=v;save();if(X.i<X.o.length-1){X.i++;X.f=0}render()}
 function shufX(){X.sh=!X.sh;X.o=X.sh?shuffle(X.base.slice()):X.base.slice();X.i=0;X.f=0;render()}
 function restart(){X.r={};X.i=0;X.f=0;X.o=X.sh?shuffle(X.base.slice()):X.base.slice();render()}
 function cf(k,v){S.cfg[k]=v;save();render()}
-function togOn(){if(!S.cfg.on){let ok=true;try{ok=Android.canOverlay()}catch(x){}if(!ok){alert('Allow "Display over other apps" for Romanian Flash, then come back and switch passive exposure on again.');Android.askOverlay();return}}cf('on',!S.cfg.on)}
-function setHTML(){const c=S.cfg;return`<h1>Settings</h1>
-<div class=li><b style="flex:1">Passive exposure</b><button class="tg ${c.on?'on':''}" onclick="togOn()"></button></div>
-<div class=li style="display:block"><b>Show a card every</b><br><input type=number min=1 value="${c.every}" onchange="cf('every',+this.value||15)"> <span class=m>minutes</span><br><b>Between</b><br><input type=time value="${c.from}" onchange="cf('from',this.value)"> <span class=m>and</span> <input type=time value="${c.to}" onchange="cf('to',this.value)"></div>
-<div class=li style="display:block"><b>Card face shows</b><br><span class="chip ${c.face=='en'?'on':''}" onclick="cf('face','en')">English</span><span class="chip ${c.face=='ro'?'on':''}" onclick="cf('face','ro')">Romanian</span></div>
-<div class=li style="display:block"><b>Show cards from</b><br>${S.cols.map(k=>`<span class="chip ${k.ps?'on':''}" onclick="col(${k.id}).ps=!col(${k.id}).ps;save();render()">${e(k.name)}</span>`).join('')||'<span class=m>No collections yet</span>'}</div>
-<p class=m style="margin:12px 6px">Easy cards pop up less often, Hard cards more often.</p>`}
+function togOn(){if(!S.cfg.on){let ok=true;try{ok=Android.canOverlay()}catch(x){}if(!ok){toast('Allow "Display over other apps", then switch it on again');Android.askOverlay();return}}cf('on',!S.cfg.on)}
+function setHTML(){const c=S.cfg;return`<h1>Preferences</h1>
+<div class=sec><div class=rw><div><b>Passive exposure</b><br><small class=m>Pop up cards over other apps</small></div><button class="tg ${c.on?'on':''}" onclick="togOn()"></button></div></div>
+<div class=sec><h4>Frequency</h4><div class=rw><span>Show a card every</span><span class=nf><input type=number min=1 value="${c.every}" onchange="cf('every',+this.value||15)"><span class=m>min</span></span></div></div>
+<div class=sec><h4>Between</h4><div class=rw><span>All day</span><button class="tg ${c.all?'on':''}" onclick="cf('all',!S.cfg.all)"></button></div>${c.all?'':`<div class=rw style="margin-top:20px"><input type=time value="${c.from}" onchange="cf('from',this.value)"><span class=m>to</span><input type=time value="${c.to}" onchange="cf('to',this.value)"></div>`}</div>
+<div class=sec><h4>Card face</h4><div class=seg><button class="${c.face=='ro'?'on':''}" onclick="cf('face','ro')">Romanian</button><button class="${c.face=='en'?'on':''}" onclick="cf('face','en')">English</button></div></div>
+<div class=sec><h4>Show cards from</h4>${S.cols.map(k=>`<span class="chip ${k.ps?'on':''}" onclick="col(${k.id}).ps=!col(${k.id}).ps;save();render()">${e(k.name)}</span>`).join('')||'<span class=m>No collections yet</span>'}</div>
+<p class=m style="margin:0 8px">Easy cards appear less often, Hard cards more often.</p>`}
 render();save();
 </script></body></html>
