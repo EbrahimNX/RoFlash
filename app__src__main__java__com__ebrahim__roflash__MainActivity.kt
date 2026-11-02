@@ -16,6 +16,10 @@ class MainActivity : Activity() {
     private var cb: ValueCallback<Array<Uri>>? = null
     private var pending = ""
 
+    companion object { @Volatile var visible = false }
+    override fun onResume() { super.onResume(); visible = true }
+    override fun onPause() { visible = false; super.onPause() }
+
     override fun onCreate(b: Bundle?) {
         super.onCreate(b)
         window.statusBarColor = android.graphics.Color.WHITE
@@ -66,6 +70,11 @@ class MainActivity : Activity() {
                     addCategory(Intent.CATEGORY_OPENABLE); type = "text/plain"; putExtra(Intent.EXTRA_TITLE, name)
                 }, 8)
             }
+        }
+        @JavascriptInterface fun batteryOk() =
+            getSystemService(android.os.PowerManager::class.java).isIgnoringBatteryOptimizations(packageName)
+        @JavascriptInterface fun askBattery() {
+            startActivity(Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:$packageName")))
         }
         @JavascriptInterface fun canOverlay() = Settings.canDrawOverlays(this@MainActivity)
         @JavascriptInterface fun askOverlay() {

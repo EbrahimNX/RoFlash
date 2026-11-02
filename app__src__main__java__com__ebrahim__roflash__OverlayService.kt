@@ -7,11 +7,15 @@ import android.animation.ValueAnimator
 import android.app.*
 import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Outline
 import android.graphics.PixelFormat
+import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.*
 import android.provider.Settings
@@ -28,18 +32,36 @@ import java.util.Calendar
 import kotlin.math.abs
 import kotlin.random.Random
 
+class BootReceiver : BroadcastReceiver() {
+    override fun onReceive(c: Context, i: Intent) {
+        runCatching {
+            val on = JSONObject(File(c.filesDir, "data.json").readText()).optJSONObject("cfg")?.optBoolean("on") ?: false
+            if (on && Settings.canDrawOverlays(c)) c.startForegroundService(Intent(c, OverlayService::class.java))
+        }
+    }
+}
+
 class OverlayService : Service() {
     private class Item(val en: String, val ro: String, val w: Int, val img: String)
 
     private val h = Handler(Looper.getMainLooper())
+    private val action = "com.ebrahim.roflash.TICK"
     private var box: View? = null
     private var anim: ValueAnimator? = null
     private var autoR: Runnable? = null
     private var running = false
+    private var lastSig = ""
     private var base = 0
     private var sw = 0
+    private val rx = object : BroadcastReceiver() { override fun onReceive(c: Context?, i: Intent?) { tick() } }
 
     private fun mins(s: String) = runCatching { s.split(":").let { it[0].toInt() * 60 + it[1].toInt() } }.getOrDefault(0)
+    private fun pi() = PendingIntent.getBroadcast(this, 0, Intent(action).setPackage(packageName),
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+    private fun schedule(ms: Long) {
+        getSystemService(AlarmManager::class.java)
+            .setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + ms.coerceAtLeast(3000), pi())
+    }
 
     @Suppress("DEPRECATION")
     private fun fg(): String? = try {
@@ -51,33 +73,52 @@ class OverlayService : Service() {
         last
     } catch (_: Exception) { null }
 
-    private val tick = object : Runnable {
-        override fun run() {
-            val c = cfg()
-            val cal = Calendar.getInstance()
-            val now = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE)
-            val s = mins(c.optString("from", "08:00")); val e = mins(c.optString("to", "22:00"))
-            val inWin = if (s <= e) now in s until e else now >= s || now < e
-            val skip = c.optJSONArray("skip")
-            val f = fg()
-            val blocked = f != null && (f == packageName || (skip != null && (0 until skip.length()).any { skip.getString(it) == f }))
-            if ((c.optBoolean("all", false) || inWin) && !blocked && box == null && Settings.canDrawOverlays(this@OverlayService)) show(c)
-            h.postDelayed(this, c.optInt("every", 15).coerceAtLeast(1) * 60000L)
-        }
+    private fun tick() {
+        val c = cfg()
+        val everyMs = c.optInt("every", 15).coerceAtLeast(1) * 60000L
+        val prefs = getSharedPreferences("p", 0)
+        val now = System.currentTimeMillis()
+        val last = prefs.getLong("last", 0L)
+        if (now - last < everyMs - 5000) { schedule(everyMs - (now - last)); return }
+        val cal = Calendar.getInstance()
+        val m = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE)
+        val s = mins(c.optString("from", "08:00")); val e = mins(c.optString("to", "22:00"))
+        val inWin = c.optBoolean("all", false) || (if (s <= e) m in s until e else m >= s || m < e)
+        if (!inWin) { schedule(5 * 60000L); return }
+        val skip = c.optJSONArray("skip"); val f = fg()
+        val blocked = MainActivity.visible || (f != null && skip != null && (0 until skip.length()).any { skip.getString(it) == f })
+        if (blocked || box != null || !Settings.canDrawOverlays(this)) { schedule(30000L); return }
+        show(c)
+        prefs.edit().putLong("last", now).apply()
+        schedule(everyMs)
     }
 
     override fun onBind(i: Intent?): IBinder? = null
 
+    override fun onCreate() {
+        super.onCreate()
+        val f = IntentFilter(action)
+        if (Build.VERSION.SDK_INT >= 33) registerReceiver(rx, f, Context.RECEIVER_NOT_EXPORTED) else registerReceiver(rx, f)
+    }
+
     override fun onStartCommand(i: Intent?, f: Int, id: Int): Int {
         getSystemService(NotificationManager::class.java)
             .createNotificationChannel(NotificationChannel("p", "Passive exposure", NotificationManager.IMPORTANCE_MIN))
-        startForeground(1, Notification.Builder(this, "p").setContentTitle("Passive exposure is on")
-            .setSmallIcon(android.R.drawable.ic_menu_agenda).build())
-        if (!running) { running = true; h.postDelayed(tick, cfg().optInt("every", 15).coerceAtLeast(1) * 60000L) }
+        try {
+            startForeground(1, Notification.Builder(this, "p").setContentTitle("Passive exposure is on")
+                .setSmallIcon(android.R.drawable.ic_menu_agenda).build())
+        } catch (_: Exception) {}
+        val sig = cfg().toString()
+        if (!running) { running = true; lastSig = sig; schedule(8000) }
+        else if (sig != lastSig) { lastSig = sig; schedule(2000) }
         return START_STICKY
     }
 
-    override fun onDestroy() { h.removeCallbacksAndMessages(null); hide(); running = false }
+    override fun onDestroy() {
+        h.removeCallbacksAndMessages(null); hide(); running = false
+        try { unregisterReceiver(rx) } catch (_: Exception) {}
+        getSystemService(AlarmManager::class.java).cancel(pi())
+    }
 
     private fun data(): JSONObject = runCatching { JSONObject(File(filesDir, "data.json").readText()) }
         .getOrElse { JSONObject(getSharedPreferences("p", 0).getString("data", "{}")!!) }
@@ -100,8 +141,7 @@ class OverlayService : Service() {
     }
 
     private fun show(c: JSONObject) {
-        val d0 = data()
-        val cols = d0.optJSONArray("cols") ?: return
+        val cols = data().optJSONArray("cols") ?: return
         val pool = ArrayList<Item>()
         for (i in 0 until cols.length()) {
             val col = cols.getJSONObject(i)
@@ -110,19 +150,20 @@ class OverlayService : Service() {
             for (j in 0 until cs.length()) {
                 val k = cs.getJSONObject(j)
                 val w = when (k.optString("r")) { "e" -> 1; "h" -> 8; else -> 3 }
-                pool.add(Item(k.getString("en"), k.getString("ro"), w, k.optString("pic", "")))
+                pool.add(Item(k.optString("en", ""), k.optString("ro", ""), w, k.optString("pic", "")))
             }
         }
         if (pool.isEmpty()) return
         var x = Random.nextInt(pool.sumOf { it.w })
         val t = pool.first { x -= it.w; x < 0 }
         val roFirst = c.optString("face", "ro") == "ro"
-        val front = if (roFirst) t.ro else t.en
-        val back = if (roFirst) t.en else t.ro
+        val front = (if (roFirst) t.ro else t.en).ifBlank { t.ro.ifBlank { t.en } }
+        val back = (if (roFirst) t.en else t.ro).ifBlank { front }
         val bmp = if (c.optBoolean("pics", false) && t.img.contains(",")) runCatching {
             val b = Base64.decode(t.img.substringAfter(","), Base64.DEFAULT)
             BitmapFactory.decodeByteArray(b, 0, b.size)
         }.getOrNull() else null
+        val tf = runCatching { Typeface.createFromAsset(assets, "fonts/ma.ttf") }.getOrNull()
 
         val wm = getSystemService(WindowManager::class.java)
         val d = resources.displayMetrics.density
@@ -137,6 +178,7 @@ class OverlayService : Service() {
         }
         val tv = TextView(this).apply {
             text = front; textSize = 18f; setTextColor(Color.parseColor("#1E1B3A"))
+            if (tf != null) typeface = tf
             maxWidth = (sw * 0.75).toInt() - (52 * d).toInt() - (10 * d).toInt() - (40 * d).toInt()
         }
         val card = LinearLayout(this).apply {
